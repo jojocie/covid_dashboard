@@ -2,13 +2,34 @@
 #install.packages('dash')
 
 rm(list = ls())
-setwd("~/Documents/covid_projects/covid_dashboard/")
+
+
+
+thisFile <- function() {
+  cmdArgs <- commandArgs(trailingOnly = FALSE)
+  needle <- "--file="
+  match <- grep(needle, cmdArgs)
+  if (length(match) > 0) {
+    # Rscript
+    return(normalizePath(sub(needle, "", cmdArgs[match])))
+  } else {
+    # 'source'd via R console
+    return(normalizePath(sys.frames()[[1]]$ofile))
+  }
+}
+this_file_path = thisFile()
+this_file_path = dirname(this_file_path)
+setwd(this_file_path)
+#setwd("~/Documents/covid_projects/covid_dashboard/") # backup setwd
+
 
 source("sources/data_proc.R")
 dep_list = load("sources/dep_list")
 library(dash)
 library(dashCoreComponents)
 library(dashHtmlComponents)
+
+
 
 
 location_data = get_fr_data()
