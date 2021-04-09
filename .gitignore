@@ -1,4 +1,6 @@
-data/
+data/donnees-hospitalieres-covid19.csv
+data/sp-pos-quot-fra.csv
+data/sp-pos-quot-dep.csv
 data_update_local.app
 .RData
 .Rhistory

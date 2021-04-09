@@ -1,0 +1,5 @@
+Download data from links, these commands are can be used:
+
+curl -L https://www.data.gouv.fr/en/datasets/r/406c6a23-e283-4300-9484-54e78c8ae675 > sp-pos-quot-dep.csv
+curl -L https://www.data.gouv.fr/en/datasets/r/dd0de5d9-b5a5-4503-930a-7b08dc0adc7c > sp-pos-quot-fra.csv
+curl -L https://www.data.gouv.fr/en/datasets/r/63352e38-d353-4b54-bfd1-f1b3ee1cabd7 > donnees-hospitalieres-covid19.csv
