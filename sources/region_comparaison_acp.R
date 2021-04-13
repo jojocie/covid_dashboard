@@ -4,13 +4,26 @@ print(getwd())
 load("intermediate_data/territoires_france_infos.Rdata")
 
 
+get_dep_acp_var_selection_dropdown = function(){
+  
+  dd = dccChecklist(
+    options=list(
+      list(label = "Décès", value = "dc"),
+      list(label = "Hospitalisation", value = "hosp"),
+      list(label = "Réanimation", value = "rea")
+    ),
+    value = list("dc"),
+    id = "get_dep_acp_var_selection_dropdown"
+    )
+  return(dd)
+}
 
 
-
-compute_acp_data = function(territoires_france_infos ,donnees_hosp_mixed,min_date = as.Date("2021/02/01"), max_date = as.Date("2022/11/30"),interest_variables = c("dc","hosp","rea")){
+compute_acp_data = function(territoires_france_infos ,donnees_hosp_mixed,min_date = as.Date("2020/01/01"), max_date = as.Date("2025/04/13"),interest_variables = c("dc","hosp","rea")){
   interest_pca_variables = c()
   territoires_france_infos_loc = territoires_france_infos %>% filter(territoires_france_infos$CODDEP %in% donnees_hosp_mixed$dep)
-  
+  print(class(min_date))
+  print(max_date)
   for(var_itt in interest_variables){
     territoires_france_infos_loc[[var_itt]] = 0
     for (dep_itt in territoires_france_infos_loc$CODDEP){
@@ -39,11 +52,14 @@ compute_acp_data = function(territoires_france_infos ,donnees_hosp_mixed,min_dat
     var_name = paste0(var_itt,"_density")
     interest_pca_variables = c(interest_pca_variables,var_name)
     territoires_france_infos_loc[[var_name]] = territoires_france_infos_loc[[var_itt]] * territoires_france_infos_loc$SUPERFICIE/ territoires_france_infos_loc$PMUN**2
-    
-    res_pca = PCA(territoires_france_infos_loc%>%select(interest_pca_variables),graph = FALSE, ncp = 2)
-    return(res_pca)
+
     
   }
+  
+  X = as.data.frame(territoires_france_infos_loc%>%select(interest_pca_variables))
+  rownames(X) = territoires_france_infos_loc$CODDEP
+  res_pca = PCA(X,graph = FALSE, ncp = 2)
+  return(res_pca)
 }
 
 
@@ -51,6 +67,7 @@ compute_acp_data = function(territoires_france_infos ,donnees_hosp_mixed,min_dat
 get_dep_pca_date_picker = function(){
   date_picker = dccDatePickerRange(
     id='dep_pca_date_picker',
+    display_format = "DD/MM/YYYY",
     #min_date_allowed=as.Date('1995-8-5'),
     #max_date_allowed=as.Date('2017-9-19'),
     #initial_visible_month=as.Date('2017-8-5'),

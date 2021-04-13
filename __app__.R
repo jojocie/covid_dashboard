@@ -38,7 +38,7 @@ library(dashHtmlComponents)
 location_data = get_fr_data()
 donnees_hosp_mixed = get_hosp_data()
 
-res_pca1 = compute_acp_data(territoires_france_infos,donnees_hosp_mixed)
+res_pca1 = compute_acp_data(territoires_france_infos,donnees_hosp_mixed,max_date = Sys.Date())
 now = timestamp()
 
 app <- Dash$new()
@@ -201,7 +201,7 @@ app$layout(
         
       ),
       htmlDiv(
-        children = get_dep_pca_date_picker(),
+        children = list(get_dep_pca_date_picker(),get_dep_acp_var_selection_dropdown()),
         style = list("text-align" = 'center')
       ),
       htmlDiv(
@@ -217,7 +217,19 @@ app$layout(
   )
 )
 
-
+app$callback(
+  
+  output = output(id='dep_pca', property = 'figure'),
+  params = list(input(id = 'dep_pca_date_picker', property = 'start_date'),
+                input(id = 'dep_pca_date_picker', property = 'end_date'),
+                input(id = 'get_dep_acp_var_selection_dropdown', property = 'value')),
+  function(start_date, end_date,var_selection){
+    print(var_selection)
+    print(class(var_selection))
+    res_pca = compute_acp_data(territoires_france_infos,donnees_hosp_mixed,min_date = as.Date(start_date),max_date = as.Date(end_date),interest_variables = var_selection)
+    return(get_dep_pca_figure(res_pca))
+  }
+)
 app$callback(
   output=list(output(id='graph_pos', property='figure'),
               output(id='graph_tested', property='figure'),
