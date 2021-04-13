@@ -24,8 +24,11 @@ setwd(this_file_path)
 
 
 source("sources/data_proc.R")
+source("sources/region_comparaison_acp.R")
+
 dep_list = load("sources/dep_list")
 library(dash)
+library(plotly)
 library(dashCoreComponents)
 library(dashHtmlComponents)
 
@@ -34,6 +37,8 @@ library(dashHtmlComponents)
 
 location_data = get_fr_data()
 donnees_hosp_mixed = get_hosp_data()
+
+res_pca1 = compute_acp_data(territoires_france_infos,donnees_hosp_mixed)
 now = timestamp()
 
 app <- Dash$new()
@@ -194,6 +199,13 @@ app$layout(
         # style = list("width" = "80%", "text-align" = 'center')
         style = list("margin" = "50px")
         
+      ),
+      htmlDiv(
+        children = dccGraph(
+         id = 'dep_pca',
+         figure = get_dep_pca_figure(res_pca1)
+        ),
+        style = list("margin" = "50px")
       )
       
 
@@ -241,6 +253,5 @@ app$callback(
     assign("now", timestamp(), envir = .GlobalEnv)
     return(append(list(get_positive_figure(location_data,suffix_title) , get_tested_figure(location_data,suffix_title), get_ratio_figure(location_data)), hosp_fig))
   })
-
 app$run_server(host = '0.0.0.0')
 #app$run_server()
