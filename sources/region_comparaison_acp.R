@@ -47,6 +47,21 @@ compute_acp_data = function(territoires_france_infos ,donnees_hosp_mixed,min_dat
 }
 
 
+
+get_dep_pca_date_picker = function(){
+  date_picker = dccDatePickerRange(
+    id='dep_pca_date_picker',
+    #min_date_allowed=as.Date('1995-8-5'),
+    #max_date_allowed=as.Date('2017-9-19'),
+    #initial_visible_month=as.Date('2017-8-5'),
+    start_date = as.Date('2020-01-01'),
+    end_date = Sys.Date()
+  )
+  return(date_picker)
+  
+}
+
+
 get_dep_pca_figure = function(res_pca){
   
   var_names = colnames(res_pca$call$X)

@@ -201,6 +201,10 @@ app$layout(
         
       ),
       htmlDiv(
+        children = get_dep_pca_date_picker(),
+        style = list("text-align" = 'center')
+      ),
+      htmlDiv(
         children = dccGraph(
          id = 'dep_pca',
          figure = get_dep_pca_figure(res_pca1)
