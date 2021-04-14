@@ -201,7 +201,7 @@ app$layout(
         
       ),
       htmlDiv(
-        children = list(get_dep_pca_date_picker(),get_dep_acp_var_selection_dropdown()),
+        children = list(get_dep_pca_date_picker(),get_dep_acp_var_selection_dropdown(),get_dep_acp_computation_selection_dropdown()),
         style = list("text-align" = 'center')
       ),
       htmlDiv(
@@ -222,11 +222,14 @@ app$callback(
   output = output(id='dep_pca', property = 'figure'),
   params = list(input(id = 'dep_pca_date_picker', property = 'start_date'),
                 input(id = 'dep_pca_date_picker', property = 'end_date'),
-                input(id = 'get_dep_acp_var_selection_dropdown', property = 'value')),
-  function(start_date, end_date,var_selection){
-    print(var_selection)
-    print(class(var_selection))
-    res_pca = compute_acp_data(territoires_france_infos,donnees_hosp_mixed,min_date = as.Date(start_date),max_date = as.Date(end_date),interest_variables = var_selection)
+                input(id = 'dep_acp_var_selection_dropdown', property = 'value'),
+                input(id = "dep_acp_computation_selection_dropdown", property = 'value')),
+  function(start_date, end_date,var_selection, computation_selection){
+    
+    #print(var_selection)
+    #print(computation_selection)
+    #print(class(computation_selection))
+    res_pca = compute_acp_data(territoires_france_infos,donnees_hosp_mixed,min_date = as.Date(start_date),max_date = as.Date(end_date),interest_variables = var_selection, computations=computation_selection)
     return(get_dep_pca_figure(res_pca))
   }
 )

@@ -13,13 +13,30 @@ get_dep_acp_var_selection_dropdown = function(){
       list(label = "Réanimation", value = "rea")
     ),
     value = list("dc"),
-    id = "get_dep_acp_var_selection_dropdown"
+    id = "dep_acp_var_selection_dropdown"
     )
   return(dd)
 }
 
+get_dep_acp_computation_selection_dropdown = function(){
+  
+  dd = dccChecklist(
+    options=list(
+      list(label = "Population", value = "pop"),
+      list(label = "Densité", value = "density"),
+      list(label = "Superficie", value = "sup")
+    ),
+    value = list("pop"),
+    id = "dep_acp_computation_selection_dropdown"
+  )
+  return(dd)
+}
 
-compute_acp_data = function(territoires_france_infos ,donnees_hosp_mixed,min_date = as.Date("2020/01/01"), max_date = as.Date("2025/04/13"),interest_variables = c("dc","hosp","rea")){
+
+compute_acp_data = function(territoires_france_infos ,donnees_hosp_mixed,min_date = as.Date("2020/01/01"), max_date = as.Date("2025/04/13"),interest_variables = c("dc","hosp","rea"),computations=c('pop')){
+  #computations : list in c("pop","density","sup")
+  #computations = list("pop","density",'sup')
+  computations = as.vector(computations)
   interest_pca_variables = c()
   territoires_france_infos_loc = territoires_france_infos %>% filter(territoires_france_infos$CODDEP %in% donnees_hosp_mixed$dep)
   print(class(min_date))
@@ -41,18 +58,22 @@ compute_acp_data = function(territoires_france_infos ,donnees_hosp_mixed,min_dat
       territoires_france_infos_loc[territoires_france_infos_loc$CODDEP==dep_itt,var_itt] = nbr
     }
     
+    if ("pop" %in% computations){
+      var_name = paste0(var_itt,"_pop")
+      interest_pca_variables = c(interest_pca_variables,var_name)
+      territoires_france_infos_loc[[var_name]] = territoires_france_infos_loc[[var_itt]] / territoires_france_infos_loc$PMUN
+    }
+    if ("sup" %in% computations){
+      var_name = paste0(var_itt,"_sup")
+      interest_pca_variables = c(interest_pca_variables,var_name)
+      territoires_france_infos_loc[[var_name]] = territoires_france_infos_loc[[var_itt]] / territoires_france_infos_loc$SUPERFICIE
+    }
     
-    
-    var_name = paste0(var_itt,"_pop")
-    interest_pca_variables = c(interest_pca_variables,var_name)
-    territoires_france_infos_loc[[var_name]] = territoires_france_infos_loc[[var_itt]] / territoires_france_infos_loc$PMUN
-    var_name = paste0(var_itt,"_sup")
-    interest_pca_variables = c(interest_pca_variables,var_name)
-    territoires_france_infos_loc[[var_name]] = territoires_france_infos_loc[[var_itt]] / territoires_france_infos_loc$SUPERFICIE
-    var_name = paste0(var_itt,"_density")
-    interest_pca_variables = c(interest_pca_variables,var_name)
-    territoires_france_infos_loc[[var_name]] = territoires_france_infos_loc[[var_itt]] * territoires_france_infos_loc$SUPERFICIE/ territoires_france_infos_loc$PMUN**2
-
+    if ('density' %in% computations){
+      var_name = paste0(var_itt,"_density")
+      interest_pca_variables = c(interest_pca_variables,var_name)
+      territoires_france_infos_loc[[var_name]] = territoires_france_infos_loc[[var_itt]] * territoires_france_infos_loc$SUPERFICIE/ territoires_france_infos_loc$PMUN**2
+    }
     
   }
   
@@ -80,11 +101,32 @@ get_dep_pca_date_picker = function(){
 
 
 get_dep_pca_figure = function(res_pca){
-  
+  print("debut_get_pca_fig")
+  cat("dimX = ",dim(res_pca$call$X),'\n')
+  cat("dimind = ",dim(res_pca$ind$coord),'\n')
+  cat("dimvar = ",dim(res_pca$var$coord),'\n')
   var_names = colnames(res_pca$call$X)
   ind_name = rownames(res_pca$call$X)
-  ind_fig = list(data = list(list(x = as.list(as.vector(res_pca$ind$coord[,1])),
-                                  y = as.list(as.vector(res_pca$ind$coord[,2])),
+  ind_x = res_pca$ind$coord[,1]
+
+  
+  
+  
+
+  if(dim(res_pca$call$X)[2] == 1){
+    print("Une seule variable")
+    var_y = list(0)
+    var_x = list(1)
+    ind_y = rep(0,length(ind_x))
+    
+  } else {
+    ind_y = res_pca$ind$coord[,2]
+    var_y = res_pca$var$coord[,2]
+    var_x = res_pca$var$coord[,1]
+  }
+    
+  ind_fig = list(data = list(list(x = as.list(as.vector(ind_x)),
+                                  y = as.list(as.vector(ind_y)),
                                   text = as.list(ind_name),
                                   mode = "markers"
                                   )
@@ -97,8 +139,8 @@ get_dep_pca_figure = function(res_pca){
                               #width = "300px"
                               )
                 )
-  var_fig = list(data = list(list(x = as.list(as.vector(res_pca$var$coord[,1])),
-                                  y = as.list(as.vector(res_pca$var$coord[,2])),
+  var_fig = list(data = list(list(x = as.list(as.vector(var_x)),
+                                  y = as.list(as.vector(var_y)),
                                   text = as.list(var_names),
                                   type = 'scatter',
                                   mode = "markers+text",
