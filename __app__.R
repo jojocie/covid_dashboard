@@ -120,6 +120,50 @@ app$layout(
       
 
       
+      
+      htmlH2("Comparaison de l'évolution épidémique département par département"),
+      htmlP(children = list("Construction de l'analyse en composantes principales selon plusieurs indicateurs épidémique 
+                            qui peuvent être choisi à l'aide des boites de sélection. Les indicateurs se distinguent par 
+                            les grandeurs qu'ils réprésente ainsi que par les calculs effectués pour normaliser la grandeur 
+                            d'un département à un autre. Les grandeurs proposées sont : ", 
+                            htmlUl(list(htmlLi("Différence du nombre de personne hospitalisé entre les deux dates séléctionnées"),
+                                        htmlLi("Différence du nombre de personne en réanimation entre les deux dates séléctionnées"),
+                                        htmlLi("Nombre de morts entre les deux dates sélectionnées")
+                            )
+                            ),
+                            "Les normalisations proposées sont",
+                            htmlUl(list(htmlLi("Par population"),
+                                        htmlLi("Par superficie"),
+                                        htmlLi("Par densité")))
+      )
+      ),
+      
+      htmlBr(),
+      htmlDiv(
+        #children = list(get_dep_pca_date_picker(),get_dep_acp_var_selection_dropdown(),get_dep_acp_computation_selection_dropdown()),
+        children = htmlTable(
+          children = list(htmlTr(list(htmlTd("Sélection de la date", style = list("text-align" = 'center')),
+                                      htmlTd("Sélection des grandeurs", style = list("text-align" = 'center')),
+                                      htmlTd("Sélection des calculs", style = list("text-align" = 'center'))
+          )
+          ),
+          htmlTr(list(htmlTd(get_dep_pca_date_picker(), style = list('padding' = '0px,20px,0px,20px','width' = "20%")),
+                      htmlTd(get_dep_acp_var_selection_dropdown(), style = list('padding' = '0px,20px,0px,20px','width' = "20%")),
+                      htmlTd(get_dep_acp_computation_selection_dropdown(), style = list('padding' = '0px,20px,0px,20px','width' = "20%"))
+          )
+          )
+          )
+        ),
+        style = list("text-align" = 'center', 'width' = '100%')
+      ),
+      htmlDiv(
+        children = dccGraph(
+          id = 'dep_pca',
+          figure = get_dep_pca_figure(res_pca1)
+        ),
+        style = list("margin" = "50px")
+      ),
+      htmlH2("Evolution des indicateurs au cours du temps"),
       htmlTable(htmlTr(list(
         
         htmlTd(
@@ -130,7 +174,7 @@ app$layout(
               value="France",
               id="location_selector"
             )
-        ) , style = list("width" = "35%")), 
+          ) , style = list("width" = "35%")), 
         htmlTd(list(
           htmlDiv("Selectionnner le nombre de jour utilisé pour la moyenne mobile :", style = list("margin-bottom" = "15px")),
           dccSlider(
@@ -142,7 +186,6 @@ app$layout(
             value = 7
           ))
         ))) , style = list("width" = "70%")),
-      
       htmlH2("Résultats des tests PCR"),
       htmlP("Ces graphiques présentent l'évolution de la situation concernant les tests PCR effectués"),
       htmlP(children = "Source des donnees :"), 
@@ -199,18 +242,8 @@ app$layout(
         # style = list("width" = "80%", "text-align" = 'center')
         style = list("margin" = "50px")
         
-      ),
-      htmlDiv(
-        children = list(get_dep_pca_date_picker(),get_dep_acp_var_selection_dropdown(),get_dep_acp_computation_selection_dropdown()),
-        style = list("text-align" = 'center')
-      ),
-      htmlDiv(
-        children = dccGraph(
-         id = 'dep_pca',
-         figure = get_dep_pca_figure(res_pca1)
-        ),
-        style = list("margin" = "50px")
       )
+
       
 
     )
