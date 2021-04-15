@@ -15,3 +15,9 @@ logout
 
 * Pour arrêter la machine virtuelle : 
 halt
+
+Rscript __app__.R
+
+tmux attach-session -t 0
+
+Ctrl+b d
