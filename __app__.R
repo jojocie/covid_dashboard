@@ -114,7 +114,7 @@ app$layout(
       
       htmlH1('Evolution COVID'),
       htmlP(children = list("Ce dashboard présente l'évolution de plusieurs indicateurs de l'état de l'épidémie en France.", htmlBr(),
-                            'Les données sont mise à jour au moins une fois tous les 15 jours et des nouvelles fonctionnalités seront ajoutées.',htmlBr(),
+                            'Les données sont mises à jour au moins une fois tous les 15 jours et des nouvelles fonctionnalités seront ajoutées.',htmlBr(),
                             'contact : ', htmlA('jlalo@hotmail.fr', href = "mailto:jlalo@hotmail.fr")),
             style = list("font-size" = "130%")),
       
@@ -122,12 +122,12 @@ app$layout(
       
       
       htmlH2("Comparaison de l'évolution épidémique département par département"),
-      htmlP(children = list("Construction de l'analyse en composantes principales selon plusieurs indicateurs épidémique 
-                            qui peuvent être choisi à l'aide des boites de sélection. Les indicateurs se distinguent par 
-                            les grandeurs qu'ils réprésente ainsi que par les calculs effectués pour normaliser la grandeur 
+      htmlP(children = list("Construction de l'analyse en composantes principales selon plusieurs indicateurs épidémiques 
+                            qui peuvent être choisis à l'aide des boites de sélection. Les indicateurs se distinguent par 
+                            les grandeurs qu'ils réprésentent ainsi que par les calculs effectués pour normaliser la grandeur 
                             d'un département à un autre. Les grandeurs proposées sont : ", 
-                            htmlUl(list(htmlLi("Différence du nombre de personne hospitalisé entre les deux dates séléctionnées"),
-                                        htmlLi("Différence du nombre de personne en réanimation entre les deux dates séléctionnées"),
+                            htmlUl(list(htmlLi("Différence du nombre de personnes hospitalisés entre les deux dates séléctionnées"),
+                                        htmlLi("Différence du nombre de personnes en réanimation entre les deux dates séléctionnées"),
                                         htmlLi("Nombre de morts entre les deux dates sélectionnées")
                             )
                             ),
@@ -217,11 +217,11 @@ app$layout(
         
       ),
       htmlH2(children = "Données Hospitalières"),
-      htmlP(children = list("Ce graphique montre l'évolution de la situation hospitalières au cours du temps")),
+      htmlP(children = list("Ce graphique montre l'évolution de la situation hospitalière au cours du temps")),
       
       htmlP("Source des données hospitalières : "),
       htmlA('https://www.data.gouv.fr/en/datasets/donnees-hospitalieres-relatives-a-lepidemie-de-covid-19/', href = 'https://www.data.gouv.fr/en/datasets/donnees-hospitalieres-relatives-a-lepidemie-de-covid-19/'),
-      htmlP(list("Les graphiques sont supperposés pour mieux visualiser les interactions entre les indicateurs hospitaliers : ",
+      htmlP(list("Les graphiques sont superposés pour mieux visualiser les interactions entre les indicateurs hospitaliers : ",
                  htmlUl(list(htmlLi("Nombre de personnes hospitalisées"), htmlLi("Nombre de personnes en réanimations") , htmlLi("Nombre de décès quotidien à l'hopital (hors EPHAD et EMS)"))))),
     
       
